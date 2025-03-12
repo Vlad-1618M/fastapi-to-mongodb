@@ -1,10 +1,10 @@
 # repo metadata
+.DS_Store
 .logs
 .coverage
 .pytest_cache
 .benchmarks
 .repo_archive
-.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

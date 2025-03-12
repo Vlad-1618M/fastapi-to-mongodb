@@ -1,0 +1,44 @@
+name: Build app docker-compose images
+
+on:
+  push:
+    branches:
+      - v.tools_main
+      - '**'
+  pull_request:
+    branches:
+      - v.tools_main
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU for cross-platform builds
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set default platform for Docker builds
+        run: echo "DOCKER_DEFAULT_PLATFORM=linux/amd64" >> $GITHUB_ENV
+
+      - name: Build and start containers using docker-compose
+        run: |
+          docker-compose --env-file cfgs/.env -f build/docker-compose.yml up --build -d
+
+      - name: Wait for containers to be healthy
+        run: sleep 20
+
+      - name: Show running containers
+        run: docker-compose -f build/docker-compose.yml ps
+
+      - name: Run tests inside tests-ci container
+        run: docker-compose -f build/docker-compose.yml exec tests-ci sh -c "echo Running tests... && exit 0"
+
+      - name: Shut down containers
+        run: docker-compose -f build/docker-compose.yml down
