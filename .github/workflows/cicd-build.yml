@@ -27,18 +27,18 @@ jobs:
       - name: Set default platform for Docker builds
         run: echo "DOCKER_DEFAULT_PLATFORM=linux/amd64" >> $GITHUB_ENV
 
-      - name: Build and start containers using docker-compose
+      - name: Build and start containers using docker compose
         run: |
-          docker-compose --env-file cfgs/.env -f build/docker-compose.yml up --build -d
+          docker compose --env-file cfgs/.env -f build/docker-compose.yml up --build -d
 
       - name: Wait for containers to be healthy
         run: sleep 20
 
       - name: Show running containers
-        run: docker-compose -f build/docker-compose.yml ps
+        run: docker compose -f build/docker-compose.yml ps
 
       - name: Run tests inside tests-ci container
-        run: docker-compose -f build/docker-compose.yml exec tests-ci sh -c "echo Running tests... && exit 0"
+        run: docker compose -f build/docker-compose.yml exec tests-ci sh -c "echo Running tests... && exit 0"
 
       - name: Shut down containers
-        run: docker-compose -f build/docker-compose.yml down
+        run: docker compose -f build/docker-compose.yml down
