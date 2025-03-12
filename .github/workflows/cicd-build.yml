@@ -29,16 +29,48 @@ jobs:
 
       - name: Build and start containers using docker compose
         run: |
+          echo "::group::Build and Start Containers"
           docker compose --env-file cfgs/.env -f build/docker-compose.yml up --build -d
+          echo "::endgroup::"
 
       - name: Wait for containers to be healthy
-        run: sleep 20
+        run: |
+          echo "::group::Wait for Containers"
+          # Relying on your healthchecks but add a brief pause for extra safety.
+          sleep 10
+          echo "::endgroup::"
 
       - name: Show running containers
-        run: docker compose -f build/docker-compose.yml ps
+        run: |
+          echo "::group::Show Running Containers"
+          docker compose -f build/docker-compose.yml ps
+          echo "::endgroup::"
 
-      - name: Run tests inside tests-ci container
-        run: docker compose -f build/docker-compose.yml exec tests-ci sh -c "echo Running tests... && exit 0"
+      - name: Run integration tests
+        run: |
+          echo "::group::Integration Tests"
+          docker compose -f build/docker-compose.yml exec tests-ci sh -c "\
+            echo 'Running integration tests...' && \
+            ping -c 4 -w 5 resume-fastapi && \
+            curl -v http://resume-fastapi:8000/ && \
+            ./build/sh_scripts/cicd_run.sh"
+          echo "::endgroup::"
+
+      - name: Run API tests
+        run: |
+          echo "::group::API Tests"
+          docker compose -f build/docker-compose.yml exec tests-ci sh -c "\
+            echo 'Running API tests...' && \
+            if [ ! -f /tmp/api_key.txt ]; then \
+              ./tests/curl_tests/get_auth_key.sh && \
+              pytest -v -r charts tests/py_tests/test_mock_endpoints.py; \
+            else \
+              echo 'API key exists, skipping key generation.'; \
+            fi"
+          echo "::endgroup::"
 
       - name: Shut down containers
-        run: docker compose -f build/docker-compose.yml down
+        run: |
+          echo "::group::Shut Down Containers"
+          docker compose -f build/docker-compose.yml down
+          echo "::endgroup::"
