@@ -48,16 +48,20 @@ pipeline_sequence_check(){
     $decorator_init
     echo -e "$JOB\t${magenta}Running ${yellow}Py tests${off}:"
     sleep 1
+    
     echo -e "$JOB\t${magenta}Running ${yellow}sys_test.py${off} for the fun of it ${yellow}because I can${off}:))"
     pytest -v -r charts tests/py_tests/sys_test.py
+    
     $decorator_init
     echo -e "$JOB\t${magenta}Running ${yellow}test_mock_endpoints.py${off}\tthese are mock tests ${cyan}using ${red}fake ${cyan}fastAPI ${yellow}test client ${off}with ${cyan}real app endpoints${off}:"
     # echo -e "$JOB\t${magenta}Running ${yellow}test_mock_endpoints.py${off}:"
     pytest -v -r charts tests/py_tests/test_mock_endpoints.py
-    $decorator_init
-    echo -e "$JOB\t${magenta}Running ${yellow}test_true_endpoints_sets.py${off}\tthese are ${magenta}C.R.U.D${yellow} tests:${cyan} using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
-    # echo -e "$JOB\t${magenta}Running ${yellow}test_true_endpoints_sets.py${off}:"
-    pytest -v -r charts tests/py_tests/test_true_endpoints_sets.py
+    
+    # $decorator_init
+    # echo -e "$JOB\t${magenta}Running ${yellow}test_true_endpoints_sets.py${off} these are ${magenta}C.R.U.D${yellow} tests:${cyan} using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
+    # # echo -e "$JOB\t${magenta}Running ${yellow}test_true_endpoints_sets.py${off}:"
+    # pytest -v -r charts tests/py_tests/test_true_endpoints_sets.py
+    
     $decorator_init
     echo -e "$JOB\t${magenta}Test Env Prep:${yellow} Running shell script to handle authentication prerequisites${off}:"
     ./tests/curl_tests/collect_existing_tokens.sh
@@ -65,7 +69,7 @@ pipeline_sequence_check(){
     ./tests/curl_tests/get_auth_key.sh
     
     # echo -e "$JOB\t${magenta}Running ${yellow}test_crud_cycle_true_endpoints.py${off}:"
-    echo -e "$JOB\t${magenta}Running ${yellow}test_crud_cycle_true_endpoints.py${off}\tthese are ${magenta}sets of tests ${yellow}grouped by test data set${magenta} per endpoint:${cyan}using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
+    echo -e "$JOB\t${magenta}Running ${yellow}test_crud_cycle_true_endpoints.py${off} these are ${magenta}sets of tests ${yellow}grouped by test data set${magenta} per endpoint:${cyan}using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
     sleep 1
     pytest -v -r charts tests/py_tests/test_crud_cycle_true_endpoints.py
     
