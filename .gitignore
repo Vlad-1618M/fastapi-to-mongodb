@@ -1,3 +1,11 @@
+# repo metadata
+.logs
+.coverage
+.pytest_cache
+.benchmarks
+.repo_archive
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,7 +16,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+# build/
 develop-eggs/
 dist/
 downloads/
@@ -50,6 +58,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+.benchmarks
 
 # Translations
 *.mo
@@ -128,7 +137,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env
 .venv
 env/
 venv/
