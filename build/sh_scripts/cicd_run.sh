@@ -15,10 +15,7 @@ JOB="${green}JOB:${gray} -->${off}"
 
 pipeline_sequence_check(){
     echo -e "$JOB [$(date +'%Y-%m-%d %H:%M:%S')] Starting ${yellow}CI/CD pipeline ${green}Environment ${gray}Build:${off}"
-    sleep 1
-
     # set -e  # ... exit on first failure:
-    
     $decorator_init
     echo -e "$JOB ${magenta}FastAPI server check${off}:"
     if ! ping -c 4 -W 5 resume-fastapi; then
@@ -47,7 +44,6 @@ pipeline_sequence_check(){
 
     $decorator_init
     echo -e "$JOB ${magenta} Running ${yellow}Python Tests${off}:"
-    sleep 1
     # ___________________________________________________________________________________________________________________________________________________________________
     #_____ | Muted Test Run: Reason:--> Pipeline in githiub Actions returned [ exit code 137 ] which almost always means SIGKIL by github free runners: 
     #_____ | I asusme due to an out‑of‑memory (OOM) condition. In this case the GitHub Actions free runners are on limited resources than any local machine:  ¯\_(ツ)_/¯
@@ -78,7 +74,6 @@ pipeline_sequence_check(){
     ./tests/curl_tests/get_auth_key.sh
     
     echo -e "\n$JOB ${magenta} Running ${yellow}test_crud_cycle_true_endpoints.py${off} these are ${magenta}sets of tests ${yellow}grouped by test data set${magenta} per endpoint: ${cyan}using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
-    sleep 1
     pytest -v -r charts tests/py_tests/test_crud_cycle_true_endpoints.py
     
     $decorator_init

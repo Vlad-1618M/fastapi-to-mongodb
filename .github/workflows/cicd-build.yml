@@ -38,7 +38,7 @@ jobs:
         run: |
           echo "::group::Wait for Containers"
           # Relying on your healthchecks but add a brief pause for extra safety.
-          sleep 10
+          # sleep 10
           echo "::endgroup::"
 
       - name: Show running containers
