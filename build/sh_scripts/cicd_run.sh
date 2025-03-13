@@ -50,8 +50,8 @@ pipeline_sequence_check(){
     #_____ | for your local setup, you can uncommen the call below and see it working as designed: 
     #_____ | Also you can use 'dev_run.sh' script wich is designed for local setup with all tests and scripts included:
     
-    # echo -e "\n$JOB ${magenta} Running ${yellow}sys_test.py${off} for the fun of it: ${yellow}no real need, but usefull if on mizxed OS types:${off}"
-    # pytest -v -r charts tests/py_tests/sys_test.py
+    echo -e "\n$JOB ${magenta} Running ${yellow}sys_test.py${off} for the fun of it: ${yellow}no real need, but usefull if on mizxed OS types:${off}"
+    pytest -v -r charts tests/py_tests/sys_test.py
     # __________________________________________________________________________________________________________________________________________________________________
     
     $decorator_init
@@ -84,7 +84,6 @@ pipeline_sequence_check(){
         $decorator_done
         exit 1
     fi
-
     
     echo -e "$JOB ${magenta} Running ${yellow}revoke_api_tokens.sh CURL call${off}:"
     $decorator_init
@@ -101,6 +100,3 @@ $decorator_init
 tree .repo_archive
 $decorator_done
 
-
-
-# git commit -m '137 SIGKILL == OOM issue, reduced one more test call [ tests/py_tests/sys_test.py ] [tests/py_tests/test_true_endpoints_sets.py]' 
