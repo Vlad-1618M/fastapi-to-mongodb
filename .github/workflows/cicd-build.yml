@@ -1,0 +1,64 @@
+name: Build app docker-compose images
+
+on:
+  push:
+    branches:
+      - v.tools_main
+      - '**'
+  pull_request:
+    branches:
+      - v.tools_main
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU for cross-platform builds
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set default platform for Docker builds
+        run: echo "DOCKER_DEFAULT_PLATFORM=linux/amd64" >> $GITHUB_ENV
+
+      - name: Build and start containers using docker compose
+        # working-directory: fastapi-to-mongodb
+        run: |
+          echo "::group::Build and Start Containers"
+          docker compose --env-file cfgs/.env -f build/docker-compose-github.yml up --build -d
+          echo "::endgroup::"
+
+      - name: Wait for containers to be healthy
+        run: |
+          echo "::group::Wait for Containers"
+          # Relying on your healthchecks but add a brief pause for extra safety.
+          # sleep 10
+          echo "::endgroup::"
+
+      - name: Show running containers
+        run: |
+          echo "::group::Show Running Containers"
+          docker compose -f build/docker-compose-github.yml ps
+          echo "::endgroup::"
+
+      - name: Run integration tests
+        run: |
+          echo "::group::Integration Tests"
+          docker compose -f build/docker-compose-github.yml exec tests-ci sh -c "\
+            echo 'Running integration tests...' && \
+            ping -c 4 -w 5 resume-fastapi && \
+            curl -v http://resume-fastapi:8000/ && \
+            ./build/sh_scripts/cicd_run.sh"
+          echo "::endgroup::"
+
+      - name: Shut down containers
+        run: |
+          echo "::group::Shut Down Containers"
+          docker compose -f build/docker-compose-github.yml down
+          echo "::endgroup::"
