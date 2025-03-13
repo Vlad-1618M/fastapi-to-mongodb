@@ -58,14 +58,14 @@ pipeline_sequence_check(){
     echo -e "\n$JOB ${magenta} Running ${yellow}test_mock_endpoints.py${off} these are mock tests ${cyan}using ${red}fake ${cyan}fastAPI ${yellow}test client ${off}with ${cyan}real app endpoints${off}:"
     pytest -v -r charts tests/py_tests/test_mock_endpoints.py
     
-    # $decorator_init
-    # echo -e "$JOB ${magenta} Test Env Prep:${yellow} Running shell script to handle authentication prerequisites${off}:"
-    # ./tests/curl_tests/collect_existing_tokens.sh
-    # ./tests/curl_tests/revoke_api_tokens.sh
-    # ./tests/curl_tests/get_auth_key.sh
+    $decorator_init
+    echo -e "$JOB ${magenta} Test Env Prep:${yellow} Running shell script to handle authentication prerequisites${off}:"
+    ./tests/curl_tests/collect_existing_tokens.sh
+    ./tests/curl_tests/revoke_api_tokens.sh
+    ./tests/curl_tests/get_auth_key.sh
     
-    # echo -e "\n$JOB ${magenta} Running ${yellow}test_true_endpoints_sets.py${off} these are ${magenta}C.R.U.D${yellow} tests:${cyan} using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
-    # pytest -v -r charts tests/py_tests/test_true_endpoints_sets.py
+    echo -e "\n$JOB ${magenta} Running ${yellow}test_true_endpoints_sets.py${off} these are ${magenta}C.R.U.D${yellow} tests:${cyan} using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
+    pytest -v -r charts tests/py_tests/test_true_endpoints_sets.py
     
     $decorator_init
     echo -e "$JOB ${magenta} Test Env Prep:${yellow} Running shell script to handle authentication prerequisites${off}:"
