@@ -56,19 +56,6 @@ jobs:
             ./build/sh_scripts/cicd_run.sh"
           echo "::endgroup::"
 
-      # - name: Run API tests
-      #   run: |
-      #     echo "::group::API Tests"
-      #     docker compose -f build/docker-compose.yml exec tests-ci sh -c "\
-      #       echo 'Running API tests...' && \
-      #       if [ ! -f /tmp/api_key.txt ]; then \
-      #         ./tests/curl_tests/get_auth_key.sh && \
-      #         pytest -v -r charts tests/py_tests/test_mock_endpoints.py; \
-      #       else \
-      #         echo 'API key exists, skipping key generation.'; \
-      #       fi"
-      #     echo "::endgroup::"
-
       - name: Shut down containers
         run: |
           echo "::group::Shut Down Containers"

@@ -80,26 +80,26 @@ archive_metadata() {
 
 # _____cleanup  _____________________________________________________________: If deletion was requested |remove all found metadata items:
 cleanup_metadata() {
-    echo_blue "${JOB}: Cleaning up metadata items after archive..."
+    echo_blue "${JOB}: Cleaning up metadata items post archive ..."
     for item in "${METADATA_ITEMS[@]}"; do
         if [[ -d "$item" ]]; then
-            echo_blue "${JOB}: Attempting to delete directory: $item"
+            echo_blue "${JOB}:\tAttempting to delete directory:${gray} $item:${off}"
             rm -rf "$item"
             if [[ $? -eq 0 ]]; then
-                echo_green "${JOB}: Deleted directory: $item"
+                echo_green "${JOB}:\t${yellow}Deleted directory:${cyan} $item:${off}"
             else
                 echo_red "${JOB}:\t${red}Failed to delete ${yellow}directory: ${cyan}$item${off}"
             fi
         elif [[ -f "$item" ]]; then
-            echo_blue "${JOB}: Attempting to delete file: $item"
+            echo_blue "${JOB}:\tAttempting to delete file:${gray} $item:${off}"
             rm -f "$item"
             if [[ $? -eq 0 ]]; then
-                echo_green "${JOB}: Deleted file: $item"
+                echo_green "${JOB}:\t${yellow}Deleted file:${gray} $item:${off}"
             else
-                echo_red "${JOB}:\t${red}Failed to delete ${yellow}file: ${cyan}$item${off}"
+                echo_red "${JOB}:\t${red}Failed to delete ${yellow}file: ${cyan}$item:${off}"
             fi
         else
-            echo_yellow "${JOB}: Item not found (or already deleted): $item"
+            echo_yellow "${JOB}: Item not found (or already deleted): $item:"
         fi
     done
 }
@@ -109,13 +109,12 @@ main() {
     create_archive_dir
     archive_metadata
     if [[ "$1" == "delete" ]]; then                                 # If "delete" arg was in script call | remove the metadata items:
-         echo_blue "${JOB}: User requested deletion of metadata items after archiving."
+         echo_blue "\n${JOB}: ${cyan}User requested ${red}deletion${off} of metadata items after archiving:\n"
          cleanup_metadata
     else
          echo_blue "\n${JOB}: ${red}No deletion ${yellow}requested: ${magenta}Metadata items remain intact${off}:"
     fi
-    # echo_green "${JOB}: Archiving complete. ${magenta}Details${off} logged in: ${cyan}$(basename ${log_file})${off}"
-    echo_green "${JOB}: Archiving complete. ${magenta}Details${off} logged in: ${gray}$(dirname ${log_file})${off}/${cyan}$(basename ${log_file})${off}"
+    echo_green "\n${JOB}: Archiving complete:\n\t   ${magenta}Details${off} logged in: ${gray}$(dirname ${log_file})${off}/${cyan}$(basename ${log_file})${off}"
 }
 
 main "$@"

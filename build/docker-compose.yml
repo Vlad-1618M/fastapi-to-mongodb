@@ -126,15 +126,6 @@ services:
       sh -c "ping -c 4 -w 5 resume-fastapi &&
              curl -v http://resume-fastapi:8000/ &&
              ./build/sh_scripts/cicd_run.sh"
-    # command: > 
-    #   sh -c "./build/sh_scripts/cicd_run.sh"
-    
-    # command: >
-    #   sh -c "ping -c 4 -w 5 resume-fastapi &&
-    #          curl -v http://resume-fastapi:8000/ &&
-    #          ./tests/using_CURL/run_CURL_tests.sh && 
-    #          pytest -v -r charts tests/using_pytest/test_mock_endpoints.py"
-    
     healthcheck:
       test: ["CMD", "curl", "-f", "http://resume-fastapi:8000/resume/status/health"]
       interval: 10s
