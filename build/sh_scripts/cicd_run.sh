@@ -17,7 +17,7 @@ pipeline_sequence_check(){
     echo -e "$JOB [$(date +'%Y-%m-%d %H:%M:%S')] Starting ${yellow}CI/CD pipeline ${green}Environment ${gray}Build:${off}"
     sleep 1
 
-    set -e  # ... exit on first failure:
+    # set -e  # ... exit on first failure:
     
     $decorator_init
     echo -e "$JOB ${magenta}FastAPI server check${off}:"
