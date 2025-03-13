@@ -28,6 +28,7 @@ jobs:
         run: echo "DOCKER_DEFAULT_PLATFORM=linux/amd64" >> $GITHUB_ENV
 
       - name: Build and start containers using docker compose
+        working-directory: fastapi-to-mongodb
         run: |
           echo "::group::Build and Start Containers"
           docker compose --env-file cfgs/.env -f docker-compose-github.yml up --build -d
