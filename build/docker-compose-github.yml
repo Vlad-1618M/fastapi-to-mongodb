@@ -62,58 +62,6 @@ services:
     #   CORS_ORIGINS: "http://localhost,http://example.com"   # Allowed CORS origins for frontend clients:
     # _______________________________________________________________________________________________________________
 
-########################################################################################################################
-  # mongo-express:
-  #   image: mongo-express:1.0.2
-  #   container_name: mongo-express-ui
-  #   environment:
-  #     environment:
-  #     ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"                # <-- Enable MongoDB admin access in UI:
-  #     ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ADMIN_USER}  # <-- Admin username for mongo-express:
-  #     ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ADMIN_PASS}  # <-- Admin password for mongo-express:
-  #     ME_CONFIG_BASICAUTH_USERNAME: ${BASICAUTH_USER}       # <-- Basic auth username for UI:
-  #     ME_CONFIG_BASICAUTH_PASSWORD: ${BASICAUTH_PASS}       # <-- Basic auth password for UI:
-  #     ME_CONFIG_MONGODB_SERVER: ${MONGO_HOST}               # <-- MongoDB server hostname or service name:
-  #     ME_CONFIG_MONGODB_PORT: ${MONGO_PORT}                 # <-- MongoDB service port: [ 27017 default ]
-  #     ME_CONFIG_OPTIONS_EDITORTHEME: dracula                # <-- UI theme for mongo-express:
-  #     ME_CONFIG_SITE_SSL_ENABLED: "false"                   # <-- Disable SSL for web UI:
-
-  #   ports:
-  #     - "${PORTS}:8081"                                     # <-- Expose Mongo Express UI on host:
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     resume-mongo:
-  #       condition: service_healthy                          # <-- Ensure MongoDB is healthy before starting UI:
-
-    # _____________ alternative mongo-express variables _________________________________________________________
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: default         # Default theme:
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: ambiance        # Ambiance theme:
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: eclipse         # Eclipse theme:
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: material        # Material theme:
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: monokai         # Monokai theme:
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: neat            # Neat theme:
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: night           # Night theme:
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: solarized       # Solarized theme:
-    #   ME_CONFIG_SITE_BASEURL: "/mongo-express"       # Base URL path: [ e.g., behind a reverse proxy ]
-    #   ME_CONFIG_SITE_COOKIESECRET: "mysecret"        # Cookie secret for sessions: 
-    #   ME_CONFIG_SITE_SESSIONSECRET: "mysecret"       # Secret key for sessions:
-    #   ME_CONFIG_SITE_SSL_ENABLED: "true"             # Enable SSL encryption:
-    #   ME_CONFIG_SITE_SSL_CRT_PATH: "/path/to/cert"   # SSL certificate file path:
-    #   ME_CONFIG_SITE_SSL_KEY_PATH: "/path/to/key"    # SSL key file path:
-    # ________________________________________________________________________________________________________
-    #   ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
-    #   ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ADMIN_USER}
-    #   ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ADMIN_PASS}
-    #   ME_CONFIG_BASICAUTH_USERNAME: ${BASICAUTH_USER}
-    #   ME_CONFIG_BASICAUTH_PASSWORD: ${BASICAUTH_PASS}
-    #   ME_CONFIG_MONGODB_SERVER: resume-mongo
-    #   ME_CONFIG_MONGODB_PORT: "27017"
-    #   ME_CONFIG_OPTIONS_EDITORTHEME: dracula
-    #   ME_CONFIG_SITE_SSL_ENABLED: "false"
-    # ________________________________________________________________________________________________________
-
-
   tests-ci:
     build:
       context: ..
@@ -138,40 +86,9 @@ services:
   #   Runs CI/CD pipeline tests against FastAPI after it becomes or whne the server is healthy:
   #   Calls the script 'cicd_run.sh' which contains the actual test sequence.
   # ___________________________________________________________________________________________
+volumes:
+  mongo-data:                   # <-- Persistent storage for MongoDB data:
 
-########################################################################################################################
-#   tests-manual:
-#     build:
-#       context: ..
-#       dockerfile: build/test.Dockerfile
-#     container_name: tests-manual
-#     environment: 
-#       - BASE_URL=http://resume-fastapi:8000
-#     depends_on:
-#       resume-fastapi:
-#         condition: service_healthy
-#     networks:
-#       - app-network
-#     command: >
-#       sh -c "if [ ! -f /tmp/api_key.txt ]; then ./tests/curl_tests/get_auth_key.sh && pytest -v -r charts tests/py_tests/test_mock_endpoints.py; fi;
-#             tail -f /dev/null"
-#     healthcheck:
-#       test: ["CMD-SHELL", "curl -f -H \"X-API-Key: $(cat /tmp/api_key.txt)\" http://resume-fastapi:8000/resume/status/health"]
-#       interval: 10s
-#       timeout: 5s
-#       retries: 3
-
-# volumes:
-#   mongo-data:                   # <-- Persistent storage for MongoDB data:
-
-# networks:
-#   app-network:
-#     driver: bridge              # <-- bridge network is in use for internal-container communication:
-    
-# _____________ tests-manual Purpose _____________________________________________
-#   Alternative test container for API endpoints for debug . dev or manual needs:
-#   Generates an API key if it does not already exist:
-#   Runs Pytest against defined test files:
-#   Keeps the container running to allow manual execution of additional tests:
-# ________________________________________________________________________________
-########################################################################################################################
+networks:
+  app-network:
+    driver: bridge              # <-- bridge network is in use for internal-container communication:
