@@ -113,26 +113,26 @@ services:
     #   ME_CONFIG_SITE_SSL_ENABLED: "false"
     # ________________________________________________________________________________________________________
 
-########################################################################################################################
-  # tests-ci:
-  #   build:
-  #     context: ..
-  #     dockerfile: build/test.Dockerfile
-  #   container_name: tests-ci
-  #   depends_on:
-  #     resume-fastapi:
-  #       condition: service_healthy
-  #   networks:
-  #     - app-network
-  #   command: >
-  #     sh -c "ping -c 4 -w 5 resume-fastapi &&
-  #            curl -v http://resume-fastapi:8000/ &&
-  #            ./build/sh_scripts/cicd_run.sh"
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://resume-fastapi:8000/resume/status/health"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 3
+
+  tests-ci:
+    build:
+      context: ..
+      dockerfile: build/test.Dockerfile
+    container_name: tests-ci
+    depends_on:
+      resume-fastapi:
+        condition: service_healthy
+    networks:
+      - app-network
+    command: >
+      sh -c "ping -c 4 -w 5 resume-fastapi &&
+             curl -v http://resume-fastapi:8000/ &&
+             ./build/sh_scripts/cicd_run.sh"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://resume-fastapi:8000/resume/status/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     
   # _____________ tests-ci Purpose ____________________________________________________________
   #   Runs CI/CD pipeline tests against FastAPI after it becomes or whne the server is healthy:
@@ -140,33 +140,33 @@ services:
   # ___________________________________________________________________________________________
 
 ########################################################################################################################
-  tests-manual:
-    build:
-      context: ..
-      dockerfile: build/test.Dockerfile
-    container_name: tests-manual
-    environment: 
-      - BASE_URL=http://resume-fastapi:8000
-    depends_on:
-      resume-fastapi:
-        condition: service_healthy
-    networks:
-      - app-network
-    command: >
-      sh -c "if [ ! -f /tmp/api_key.txt ]; then ./tests/curl_tests/get_auth_key.sh && pytest -v -r charts tests/py_tests/test_mock_endpoints.py; fi;
-            tail -f /dev/null"
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f -H \"X-API-Key: $(cat /tmp/api_key.txt)\" http://resume-fastapi:8000/resume/status/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+#   tests-manual:
+#     build:
+#       context: ..
+#       dockerfile: build/test.Dockerfile
+#     container_name: tests-manual
+#     environment: 
+#       - BASE_URL=http://resume-fastapi:8000
+#     depends_on:
+#       resume-fastapi:
+#         condition: service_healthy
+#     networks:
+#       - app-network
+#     command: >
+#       sh -c "if [ ! -f /tmp/api_key.txt ]; then ./tests/curl_tests/get_auth_key.sh && pytest -v -r charts tests/py_tests/test_mock_endpoints.py; fi;
+#             tail -f /dev/null"
+#     healthcheck:
+#       test: ["CMD-SHELL", "curl -f -H \"X-API-Key: $(cat /tmp/api_key.txt)\" http://resume-fastapi:8000/resume/status/health"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 3
 
-volumes:
-  mongo-data:                   # <-- Persistent storage for MongoDB data:
+# volumes:
+#   mongo-data:                   # <-- Persistent storage for MongoDB data:
 
-networks:
-  app-network:
-    driver: bridge              # <-- bridge network is in use for internal-container communication:
+# networks:
+#   app-network:
+#     driver: bridge              # <-- bridge network is in use for internal-container communication:
     
 # _____________ tests-manual Purpose _____________________________________________
 #   Alternative test container for API endpoints for debug . dev or manual needs:
@@ -174,3 +174,4 @@ networks:
 #   Runs Pytest against defined test files:
 #   Keeps the container running to allow manual execution of additional tests:
 # ________________________________________________________________________________
+########################################################################################################################
