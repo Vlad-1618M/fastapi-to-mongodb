@@ -50,8 +50,8 @@ pipeline_sequence_check(){
     #_____ | for your local setup, you can uncommen the call below and see it working as designed: 
     #_____ | Also you can use 'dev_run.sh' script wich is designed for local setup with all tests and scripts included:
     
-    echo -e "\n$JOB ${magenta} Running ${yellow}sys_test.py${off} for the fun of it: ${yellow}no real need, but usefull if on mizxed OS types:${off}"
-    pytest -v -r charts tests/py_tests/sys_test.py
+    # echo -e "\n$JOB ${magenta} Running ${yellow}sys_test.py${off} for the fun of it: ${yellow}no real need, but usefull if on mizxed OS types:${off}"
+    # pytest -v -r charts tests/py_tests/sys_test.py
     # __________________________________________________________________________________________________________________________________________________________________
     
     $decorator_init
@@ -60,10 +60,12 @@ pipeline_sequence_check(){
     
     $decorator_init
     echo -e "$JOB ${magenta} Test Env Prep:${yellow} Running shell script to handle authentication prerequisites${off}:"
+
     ./tests/curl_tests/collect_existing_tokens.sh
     ./tests/curl_tests/revoke_api_tokens.sh
     ./tests/curl_tests/get_auth_key.sh
-    
+
+    sleep 1
     echo -e "\n$JOB ${magenta} Running ${yellow}test_true_endpoints_sets.py${off} these are ${magenta}C.R.U.D${yellow} tests:${cyan} using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
     pytest -v -r charts tests/py_tests/test_true_endpoints_sets.py
     
@@ -73,6 +75,7 @@ pipeline_sequence_check(){
     ./tests/curl_tests/revoke_api_tokens.sh
     ./tests/curl_tests/get_auth_key.sh
     
+    sleep 1
     echo -e "\n$JOB ${magenta} Running ${yellow}test_crud_cycle_true_endpoints.py${off} these are ${magenta}sets of tests ${yellow}grouped by test data set${magenta} per endpoint: ${cyan}using ${magenta}real ${cyan}test data and ${yellow}true fastAPI client ${off}with ${cyan}actual app endpoints${off}:"
     pytest -v -r charts tests/py_tests/test_crud_cycle_true_endpoints.py
     
@@ -85,6 +88,7 @@ pipeline_sequence_check(){
         exit 1
     fi
     
+    sleep 1
     echo -e "$JOB ${magenta} Running ${yellow}revoke_api_tokens.sh CURL call${off}:"
     $decorator_init
     ./tests/curl_tests/revoke_api_tokens.sh
