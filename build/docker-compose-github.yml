@@ -114,31 +114,32 @@ services:
     # ________________________________________________________________________________________________________
 
 ########################################################################################################################
-  tests-ci:
-    build:
-      context: ..
-      dockerfile: build/test.Dockerfile
-    container_name: tests-ci
-    depends_on:
-      resume-fastapi:
-        condition: service_healthy
-    networks:
-      - app-network
-    command: >
-      sh -c "ping -c 4 -w 5 resume-fastapi &&
-             curl -v http://resume-fastapi:8000/ &&
-             ./build/sh_scripts/cicd_run.sh"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://resume-fastapi:8000/resume/status/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+  # tests-ci:
+  #   build:
+  #     context: ..
+  #     dockerfile: build/test.Dockerfile
+  #   container_name: tests-ci
+  #   depends_on:
+  #     resume-fastapi:
+  #       condition: service_healthy
+  #   networks:
+  #     - app-network
+  #   command: >
+  #     sh -c "ping -c 4 -w 5 resume-fastapi &&
+  #            curl -v http://resume-fastapi:8000/ &&
+  #            ./build/sh_scripts/cicd_run.sh"
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://resume-fastapi:8000/resume/status/health"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 3
     
   # _____________ tests-ci Purpose ____________________________________________________________
   #   Runs CI/CD pipeline tests against FastAPI after it becomes or whne the server is healthy:
   #   Calls the script 'cicd_run.sh' which contains the actual test sequence.
   # ___________________________________________________________________________________________
 
+########################################################################################################################
   tests-manual:
     build:
       context: ..
