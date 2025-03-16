@@ -165,9 +165,9 @@ networks:
   app-network:
     driver: bridge              # <-- bridge network is in use for internal-container communication:
     
-# _____________ tests-manual Purpose _____________________________________________
+# _____________ tests-manual Purpose ______________________________________________________
 #   Alternative test container for API endpoints for debug . dev or manual needs:
 #   Generates an API key if it does not already exist:
 #   Runs Pytest against defined test files:
-#   Keeps the container running to allow manual execution of additional tests:
-# ________________________________________________________________________________
+#   Keeps the container running to allow manual execution of any additional tests as needed:
+# __________________________________________________________________________________________

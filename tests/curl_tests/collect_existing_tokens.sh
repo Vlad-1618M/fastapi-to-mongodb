@@ -26,8 +26,6 @@ API_KEY=$(tr -d '[:space:]' < /tmp/api_key.txt)
 
 # Call the GET endpoint:
 RESPONSE=$(curl -s -w "\n%{http_code}" -H "accept: application/json" -H "X-API-Key: ${API_KEY}" "${BASE_URL}${API_KEYS_ENDPOINT}")
-
-# Separate body and HTTP status:
 HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
 BODY=$(echo "$RESPONSE" | sed '$d')
 
@@ -37,17 +35,14 @@ if [ "$HTTP_CODE" -ne 200 ]; then
     exit 1
 fi
 
-# Parse the JSON response and extract keys:
+# ... JSON response pars + extract keys:
 API_KEYS=$(echo "$BODY" | jq -r '.api_keys[]')
 if [ -z "$API_KEYS" ]; then
     echo -e "$JOB ${red}Error:${off} No API keys found in the response."
     exit 1
 fi
 
-# Count the total keys:
 TOTAL_KEYS=$(echo "$BODY" | jq -r '.api_keys | length')
-
-# Write the keys into the file (one per line):
 echo "$API_KEYS" > "$KEY_KILL_LIST"
 
 echo -e "$JOB ${green}Success:${off} Collected API keys saved to: ${yellow}$KEY_KILL_LIST${cyan} Total Key count: ${green}${TOTAL_KEYS}${off}"
