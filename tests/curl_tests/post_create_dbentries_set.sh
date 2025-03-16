@@ -63,10 +63,9 @@ for i in "${!PRESIDENT_NAMES[@]}"; do
 
     # Extract first and last names
     first_name=$(echo "$name" | awk '{print $1}')
-    last_name=$(echo "$name" | awk '{print $2, $3}' | sed 's/ *$//')  # Handle possible middle names
+    last_name=$(echo "$name" | awk '{print $2, $3}' | sed 's/ *$//')  # ... Handle possible middle names:
     EMAIL=$(echo "${first_name}_${last_name}" | sed 's/ /_/g')@whitehouse.gov
 
-    # Updated JSON payload matching the new models:
     JSON_PAYLOAD=$(cat <<EOF
 {
   "resume": {

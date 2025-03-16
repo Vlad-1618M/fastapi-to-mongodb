@@ -5,9 +5,8 @@
 # Description: Opens a new terminal session and runs a given service call.
 #              Works on macOS (osascript/open) and Linux (gnome-terminal/konsole).
 #
-# Usage Example:
+# Example Call:
 #   ./terminal_sessions.sh docker ps -a
-#   ./terminal_sessions.sh docker exec -it resume-mongo mongosh -u user -p pass --authenticationDatabase admin
 #
 # Compatibility: macOS, Linux (GNOME, KDE)
 # ===============================================================================

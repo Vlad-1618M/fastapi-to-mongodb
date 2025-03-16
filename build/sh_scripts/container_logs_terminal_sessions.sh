@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # ===============================================================================
-# Script Name: logs_terminal.sh
+# Script Name: container_logs_terminal_sessions.sh
 # Description: Opens a new terminal session for each running container and tails logs.
 #              Works on macOS (osascript/open) and Linux (gnome-terminal/konsole).
 #
 # Usage Example:
-#   ./logs_terminal.sh
+#   ./container_logs_terminal_sessions.sh
 #
 # Compatibility: macOS, Linux (GNOME, KDE)
 # ===============================================================================
@@ -76,9 +76,25 @@ start_terminal() {
     right=$((right + window_width))
 }
 
-# ... running container loop | open log session for each:
+# # ... running container loop | open log session for each:
+# while IFS= read -r container; do
+#     container_id=$(echo "$container" | awk '{print $1}')
+#     container_name=$(echo "$container" | awk '{print $2}')
+#     start_terminal "$container_id" "$container_name"
+# done <<< "$containers"
+
+optional_skip=("tests-manual" "mongo-express-ui" "tests-ci")
+# optional_skip=("")
+
 while IFS= read -r container; do
-    container_id=$(echo "$container" | awk '{print $1}')
+    container_id=$(awk '{print $1}' <<< "$container")
     container_name=$(echo "$container" | awk '{print $2}')
+    
+    # ... skip container names:
+    if [[ " ${optional_skip[@]} " =~ " ${container_name} " ]]; then
+        echo -e "\t${red}Skipping ${off}Container:${gray} --> ${cyan}$container_name${off}:"
+        continue
+    fi
+    # echo -e "$container_id" "$container_name"
     start_terminal "$container_id" "$container_name"
 done <<< "$containers"

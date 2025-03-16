@@ -23,7 +23,7 @@ if [[ ! -f /tmp/api_key.txt ]]; then
 fi
 
 API_KEY=$(cat /tmp/api_key.txt)
-SHOW_ERRORS=true  # Set to "false" to suppress errors
+SHOW_ERRORS=true  # Set to "false" if suppress errors is needed:
 
 delete_all_resumes() {
     count=1
